@@ -1,4 +1,4 @@
-﻿using QuickFix;
+﻿ using QuickFix;
 using QuickFix.Fields;
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace QuickFixTeste
         public void ToAdmin(Message message, SessionID sessionID)
         {
             //Console.WriteLine("OUT: " + message);
-            mst.TranslateMessage(message);
+            Console.WriteLine(mst.TranslateMessage(message));
         }
 
         public void FromApp(Message message, SessionID sessionID)

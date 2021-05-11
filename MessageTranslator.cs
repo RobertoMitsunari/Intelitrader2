@@ -4,44 +4,87 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using QuickFix;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace QuickFixTeste
 {
     class MessageTranslator
     {
-        public void TranslateMessage(Message msg)
-        {
-            //8, 9, 35, 34, 49, 52, 56, 98, 108, 7, 16, 10
-            Dictionary<string, string> codigos =
-                new Dictionary<string, string>();
-            codigos.Add("8", "BeginString");
-            codigos.Add("9", "BodyLenght");
-            codigos.Add("35", "MsgType");
-            codigos.Add("34", "MsgSeqNum");
-            codigos.Add("49", "SenderCompID");
-            codigos.Add("52", "SendingTime");
-            codigos.Add("56", "TargetCompID");
-            codigos.Add("98", "EncryptMethod");
-            codigos.Add("108", "HeartBtInt");
-            codigos.Add("7", "BeginSeqNo");
-            codigos.Add("16", "EndSeqNo");
-            codigos.Add("10", "CheckSum");
 
-            StringBuilder sb = new StringBuilder();
-            String arroz = msg.ToString();
-            String[] vetorMsg = msg.ToString().Split("\x0001");
-            String[] div;
-            foreach (String parte in vetorMsg)
+        public string TranslateMessage(Message msg)
+        {
+
+            string[] vetorMsg = msg.ToString().Split("\x0001");
+            string[] div;
+            var msgJ = new Menssagem();
+            foreach (string parte in vetorMsg)
             {
-                if (!parte.Equals(""))
+                if (!string.IsNullOrEmpty(parte))
                 {
                     div = parte.Split("=");
-                    sb.Append(codigos[div[0]] + "=" + div[1] + "|");
+                    switch (div[0])
+                    {
+                        case
+                            "8":
+                            msgJ.BeginString = div[1];
+                            break;
+                        case
+                            "9":
+                            msgJ.BodyLenght = div[1];
+                            break;
+                        case
+                            "35":
+                            msgJ.MsgType = div[1];
+                            break;
+                        case
+                            "34":
+                            msgJ.MsgSeqNum = div[1];
+                            break;
+                        case
+                            "49":
+                            msgJ.SenderCompID = div[1];
+                            break;
+                        case
+                            "52":
+                            msgJ.SendingTime = div[1];
+                            break;
+                        case
+                            "56":
+                            msgJ.TargetCompID = div[1];
+                            break;
+                        case
+                            "98":
+                            msgJ.EncryptMethod = div[1];
+                            break;
+                        case
+                            "108":
+                            msgJ.HeartBtInt = div[1];
+                            break;
+                        case
+                            "7":
+                            msgJ.BeginSeqNo = div[1];
+                            break;
+                        case
+                            "16":
+                            msgJ.EndSeqNo = div[1];
+                            break;
+                        case
+                            "10":
+                            msgJ.CheckSum = div[1];
+                            break;
+                        case
+                            "112":
+                            msgJ.TestReqID = div[1];
+                            break;
+                    }
                 }
-                
+
             }
-            System.Console.WriteLine(sb);
-            
+            string jsonMsg = JsonSerializer.Serialize(msgJ);
+            return jsonMsg;
         }
+
+
     }
 }
